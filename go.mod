@@ -2,6 +2,8 @@ module github.com/amery/nanorpc
 
 go 1.19
 
+replace github.com/amery/protogen => ../protogen
+
 require github.com/amery/protogen v0.3.11
 
 require (
