@@ -38,6 +38,12 @@ deps:
 generate: deps
 	@find * -type f | xargs -r grep -l '^//go:generate' \
 		| xargs -rtl $(GO_GENERATE)
+	protoc -Iprotos/ \
+		--go_out=pkg/nanorpc \
+		--go_opt=paths=source_relative \
+		--go_opt=Mnanopb.proto=github.com/amery/nanorpc/pkg/nanopb \
+		--go_opt=Mnanorpc.proto=github.com/amery/nanorpc/pkg/nanorpc \
+		protos/nanorpc.proto
 
 build: generate
 	$(GO_BUILD) ./...
