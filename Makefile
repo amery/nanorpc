@@ -17,7 +17,7 @@ GO_GET := $(GO) get $(GO_GET_ARGS)
 #
 GOLINT ?= golangci-lint
 GOLINT_URL ?= github.com/golangci/golangci-lint/cmd/...
-GOLINT_VERSION ?= latest
+GOLINT_VERSION ?= v1.55
 GOLINT_ARGS ?=
 GOLINT_RUN ?= run
 GOLINT_RUN_ARGS ?= --fix
