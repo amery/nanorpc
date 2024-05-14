@@ -2,6 +2,11 @@ module github.com/amery/nanorpc/pkg/nanorpc
 
 go 1.21.9
 
+replace (
+	darvaza.org/core => ../../../../../darvaza.org/core
+	darvaza.org/sidecar => ../../../../../darvaza.org/sidecar
+)
+
 require (
 	darvaza.org/core v0.13.1
 	github.com/amery/nanorpc/pkg/nanopb v0.0.0
