@@ -3,12 +3,12 @@ module github.com/amery/nanorpc/pkg/nanorpc
 go 1.21.9
 
 require (
-	darvaza.org/core v0.14.7
+	darvaza.org/core v0.14.9
 	darvaza.org/slog v0.5.10
 	darvaza.org/slog/handlers/discard v0.4.13
-	darvaza.org/x/config v0.3.6
-	darvaza.org/x/fs v0.2.8 // indirect
-	darvaza.org/x/net v0.3.3
+	darvaza.org/x/config v0.3.7
+	darvaza.org/x/fs v0.3.2 // indirect
+	darvaza.org/x/net v0.3.4
 	github.com/amery/defaults v0.1.0 // indirect
 	github.com/amery/nanorpc/pkg/nanopb v0.0.0
 )
