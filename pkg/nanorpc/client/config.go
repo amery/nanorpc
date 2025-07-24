@@ -114,12 +114,27 @@ func (cfg *Config) newGetPathOneOf(hc *nanorpc.HashCache) func(string) nanorpc.P
 		}
 
 		return func(path string) nanorpc.PathOneof {
-			return nanorpc.GetPathOneofHash(hc.Hash(path))
+			hash, err := hc.Hash(path)
+			if err != nil {
+				cfg.logErrorf(err, "Hash(%q) failed, using string path", path)
+				// Fall back to string path on hash collision
+				return nanorpc.GetPathOneofString(path)
+			}
+
+			return nanorpc.GetPathOneofHash(hash)
 		}
 	}
 
 	// use string
 	return func(path string) nanorpc.PathOneof {
 		return nanorpc.GetPathOneofString(path)
+	}
+}
+
+func (cfg *Config) logErrorf(err error, msg string, args ...any) {
+	if cfg != nil && cfg.Logger != nil {
+		logger := cfg.Logger.Error()
+		logger = logger.WithField(slog.ErrorFieldName, err)
+		logger.Printf(msg, args...)
 	}
 }
