@@ -30,11 +30,22 @@ type DefaultSession struct {
 
 // NewDefaultSession creates a new session
 func NewDefaultSession(conn net.Conn, handler MessageHandler, logger slog.Logger) *DefaultSession {
+	id := generateSessionID(conn)
+	remoteAddr := conn.RemoteAddr().String()
+
+	// Add session-specific fields to logger
+	if logger != nil {
+		logger = logger.
+			WithField(common.FieldComponent, common.ComponentSession).
+			WithField(common.FieldSessionID, id).
+			WithField(common.FieldRemoteAddr, remoteAddr)
+	}
+
 	return &DefaultSession{
-		id:         generateSessionID(conn),
+		id:         id,
 		conn:       conn,
 		handler:    handler,
-		remoteAddr: conn.RemoteAddr().String(),
+		remoteAddr: remoteAddr,
 		logger:     logger,
 	}
 }
@@ -109,19 +120,19 @@ func (s *DefaultSession) processNextMessage(ctx context.Context, scanner *bufio.
 func (s *DefaultSession) decodeAndHandle(ctx context.Context, data []byte) error {
 	req, _, err := nanorpc.DecodeRequest(data)
 	if err != nil {
-		s.getLogger().Error().
-			WithField(common.FieldError, err).
-			WithField("data_length", len(data)).
-			WithField("data_preview", hexDump(data, 32)).
-			Print("Failed to decode request")
+		if l, ok := s.WithError(err); ok {
+			l.WithField("data_length", len(data)).
+				WithField("data_preview", hexDump(data, 32)).
+				Print("Failed to decode request")
+		}
 		return core.Wrap(err, "decode")
 	}
 
 	if err := s.handler.HandleMessage(ctx, s, req); err != nil {
-		s.getLogger().Error().
-			WithField(common.FieldRequestID, req.GetRequestId()).
-			WithField(common.FieldError, err).
-			Print("Handler error")
+		if l, ok := s.WithError(err); ok {
+			l.WithField(common.FieldRequestID, req.GetRequestId()).
+				Print("Handler error")
+		}
 		return nil // Continue on handler errors
 	}
 
