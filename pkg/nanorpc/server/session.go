@@ -20,33 +20,29 @@ import (
 
 // DefaultSession implements Session interface
 type DefaultSession struct {
-	conn       net.Conn
-	handler    MessageHandler
-	logger     slog.Logger
-	id         string
-	remoteAddr string
-	mu         sync.Mutex
+	conn    net.Conn
+	handler MessageHandler
+	logger  slog.Logger
+	id      string
+	mu      sync.Mutex
 }
 
 // NewDefaultSession creates a new session
 func NewDefaultSession(conn net.Conn, handler MessageHandler, logger slog.Logger) *DefaultSession {
 	id := generateSessionID(conn)
-	remoteAddr := conn.RemoteAddr().String()
 
-	// Add session-specific fields to logger
+	// Add session-specific fields to logger using common helpers
 	if logger != nil {
-		logger = logger.
-			WithField(common.FieldComponent, common.ComponentSession).
-			WithField(common.FieldSessionID, id).
-			WithField(common.FieldRemoteAddr, remoteAddr)
+		logger = common.WithComponent(logger, common.ComponentSession)
+		logger = common.WithSessionID(logger, id)
+		logger = common.WithRemoteAddr(logger, conn.RemoteAddr())
 	}
 
 	return &DefaultSession{
-		id:         id,
-		conn:       conn,
-		handler:    handler,
-		remoteAddr: remoteAddr,
-		logger:     logger,
+		id:      id,
+		conn:    conn,
+		handler: handler,
+		logger:  logger,
 	}
 }
 
@@ -68,7 +64,10 @@ func (s *DefaultSession) ID() string {
 
 // RemoteAddr returns the remote address
 func (s *DefaultSession) RemoteAddr() string {
-	return s.remoteAddr
+	if s.conn != nil && s.conn.RemoteAddr() != nil {
+		return s.conn.RemoteAddr().String()
+	}
+	return ""
 }
 
 // Handle processes messages for this session
@@ -167,7 +166,10 @@ func (s *DefaultSession) SendResponse(req *nanorpc.NanoRPCRequest, response *nan
 
 // generateSessionID creates a unique session identifier
 func generateSessionID(conn net.Conn) string {
-	return fmt.Sprintf("session-%s", conn.RemoteAddr().String())
+	if conn != nil && conn.RemoteAddr() != nil {
+		return fmt.Sprintf("session-%s", conn.RemoteAddr().String())
+	}
+	return fmt.Sprintf("session-unknown-%p", conn)
 }
 
 // hexDump returns a hex dump of data up to maxBytes, space-delimited
