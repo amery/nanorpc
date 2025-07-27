@@ -1,5 +1,22 @@
 # nanorpc/server
 
+> [!WARNING]
+> **This package has been moved to protomcp.org**
+>
+> This package is now **DEPRECATED**. Please update your imports:
+>
+> **Old import (deprecated):**
+> ```go
+> import "github.com/amery/nanorpc/pkg/nanorpc/server"
+> ```
+>
+> **New import:**
+> ```go
+> import "protomcp.org/nanorpc/pkg/nanorpc/server"
+> ```
+>
+> **New repository:** https://github.com/protomcp/nanorpc
+
 [![pkg.go.dev][godoc-badge]][godoc-url]
 [![Go Report Card][goreportcard-badge]][goreportcard-url]
 [![codecov][codecov-badge]][codecov-url]

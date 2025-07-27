@@ -1,3 +1,4 @@
+// Deprecated: This module has been moved to protomcp.org/nanorpc/pkg/generator
 module github.com/amery/nanorpc/pkg/generator
 
 go 1.23.0

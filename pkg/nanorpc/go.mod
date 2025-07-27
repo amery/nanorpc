@@ -1,3 +1,4 @@
+// Deprecated: This module has been moved to protomcp.org/nanorpc/pkg/nanorpc
 module github.com/amery/nanorpc/pkg/nanorpc
 
 go 1.23.0

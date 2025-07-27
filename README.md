@@ -1,5 +1,25 @@
 # NanoRPC
 
+> [!WARNING]
+> **This repository has been moved to the protomcp organization**
+>
+> This repository is now **DEPRECATED**. Please update your imports to use the new location:
+>
+> **Old imports (deprecated):**
+> ```go
+> import "github.com/amery/nanorpc/pkg/nanorpc"
+> import "github.com/amery/nanorpc/pkg/nanorpc/server"
+> ```
+>
+> **New imports:**
+> ```go
+> import "protomcp.org/nanorpc/pkg/nanorpc"
+> import "protomcp.org/nanorpc/pkg/nanorpc/client"
+> import "protomcp.org/nanorpc/pkg/nanorpc/server"
+> ```
+>
+> **New repository:** https://github.com/protomcp/nanorpc
+
 [![codecov][codecov-badge]][codecov-url]
 
 NanoRPC is a lightweight RPC framework designed for embedded systems and
